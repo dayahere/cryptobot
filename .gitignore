@@ -7,7 +7,7 @@ New-CryptoBotRepo.prefilled.ps1
 .terraform/
 *.tfstate
 *.tfstate.*
-*.terraform.lock.hcl
+.terraform.lock.hcl
 
 
 # ===== Python cache =====

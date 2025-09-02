@@ -180,3 +180,57 @@ This guide explains how to interpret the Mission Control Grafana dashboard at a 
 
 **Usage Tip:**  
 Scan **Infrastructure Health** first → check **Heartbeat & API Errors** for bot status → review **PnL & Trades** for performance → confirm **Alerts** for active incidents.
+
+
+
+
+1️⃣ Create the .oci folder and config file
+In PowerShell:
+
+powershell
+mkdir $env:USERPROFILE\.oci
+notepad $env:USERPROFILE\.oci\config
+2️⃣ Add your OCI credentials to config
+The file should look like this (replace with your actual values):
+
+Code
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaexample
+fingerprint=12:34:56:78:90:ab:cd:ef:12:34:56:78:90:ab:cd:ef
+key_file=C:\Users\dayan\.oci\oci_api_key.pem
+tenancy=ocid1.tenancy.oc1..aaaaaaaexample
+region=ap-mumbai-1
+Notes:
+
+    user and tenancy OCIDs come from the OCI Console.
+
+    fingerprint is the fingerprint of your public API key in OCI.
+
+    key_file points to your private API key file.
+
+    region is your OCI region code (e.g., us-ashburn-1, ap-mumbai-1).
+
+3️⃣ Generate an API key (if you don’t have one yet)
+    In the OCI Console, go to User Settings → API Keys.
+
+    Click Add API Key → Generate a new key pair.
+
+    Download the private key (oci_api_key.pem) and save it to C:\Users\dayan\.oci\oci_api_key.pem.
+
+    Copy the fingerprint and OCIDs into your config file.
+
+4️⃣ Test your setup
+Run:
+
+powershell
+oci os ns get
+If the OCI CLI returns your namespace, the config is correct. Then retry:
+
+powershell
+terraform init
+terraform plan
+💡 Tip: If you don’t want to use the default C:\Users\dayan\.oci\config path, you can set the environment variable:
+
+powershell
+$env:OCI_CONFIG_FILE="K:\path\to\your\config"
+If you want, I can give you a ready-to-use minimal config template with placeholders for exactly what Terraform’s OCI provider expects, so you can just fill in your details and run terraform plan without guessing.

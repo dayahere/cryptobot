@@ -24,7 +24,7 @@ jobs:
         run: docker build -t ${{ github.repository }}:latest ./bot
 
   deploy-ssh:
-    if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'deploy:')
+    if: github.ref == 'refs/heads/dev' && startsWith(github.event.head_commit.message, 'deploy:')
     needs: build-test
     runs-on: ubuntu-latest
     steps:

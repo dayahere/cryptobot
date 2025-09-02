@@ -1,0 +1,27 @@
+# ===== Environment files =====
+.env.secrets
+.env.local
+.env.example
+*.env.*.backup
+New-CryptoBotRepo.prefilled.ps1
+
+# ===== Python cache =====
+__pycache__/
+*.pyc
+
+# ===== Logs =====
+*.log
+
+# ===== OS/editor junk =====
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ===== Docker volumes/data =====
+data/
+models/
+
+# ===== Prometheus/Grafana data =====
+data/prometheus/
+data/grafana/

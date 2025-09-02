@@ -1,0 +1,71 @@
+﻿name: ci
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r bot/requirements.txt pytest
+      - name: Unit tests
+        run: pytest -q
+      - name: Build Docker
+        run: docker build -t ${{ github.repository }}:latest ./bot
+
+  deploy-ssh:
+    if: github.ref == 'refs/heads/main' && startsWith(github.event.head_commit.message, 'deploy:')
+    needs: build-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH deploy
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          API_KEY: ${{ secrets.API_KEY }}
+          API_SECRET: ${{ secrets.API_SECRET }}
+          API_PASSWORD: ${{ secrets.API_PASSWORD }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          GF_SECURITY_ADMIN_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+        with:
+          host: ${{ secrets.OCI_HOST }}
+          username: ${{ secrets.OCI_USER }}
+          key: ${{ secrets.OCI_SSH_PRIVATE_KEY }}
+          envs: API_KEY,API_SECRET,API_PASSWORD,GMAIL_APP_PASSWORD,GF_SECURITY_ADMIN_PASSWORD
+          script: |
+            cd /opt/crypto-bot
+            sudo git pull
+            {
+              echo "API_KEY=${API_KEY}"
+              echo "API_SECRET=${API_SECRET}"
+              echo "API_PASSWORD=${API_PASSWORD}"
+              echo "GMAIL_APP_PASSWORD=${GMAIL_APP_PASSWORD}"
+              echo "GF_SECURITY_ADMIN_PASSWORD=${GF_SECURITY_ADMIN_PASSWORD}"
+            } | sudo tee .env.secrets > /dev/null
+            sudo docker compose up -d --build
+            # collect recent logs (no --follow to avoid blocking)
+            sudo docker compose logs bot --tail 100
+            sudo docker compose logs prometheus --tail 100
+            sudo docker compose logs alertmanager --tail 100
+            sudo docker compose logs grafana --tail 100
+            sudo docker system df
+            sudo docker ps -a
+            # destructive cleanup — uncomment only if you intend to reclaim space
+            # sudo docker system prune -f
+            # sudo docker image prune -f
+            # sudo docker network prune -f
+            # sudo docker builder prune -f
+            # sudo docker image prune -a -f
+            sudo docker stats --no-stream
+            exit 0

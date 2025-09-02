@@ -1,0 +1,25 @@
+# This file is maintained automatically by "terraform init".
+# Manual edits may be lost in future updates.
+
+provider "registry.terraform.io/hashicorp/oci" {
+  version     = "7.16.0"
+  constraints = ">= 4.0.0"
+  hashes = [
+    "h1:dZ90/74p6E/qYi/fdgtU9IrR0xVDHRGd4tDBeNxnUXg=",
+    "zh:0baab14cafb1c8d238cbb9cb660d5391f23590111a7b1d5a0742484d4bd0e7ce",
+    "zh:2a3d66b7b678853098e6f52ef361b7721a07a444c380449340fa43c9057a2f77",
+    "zh:380a501a8ea8e022e9bbfe9f192173a8625510242f9fc8419e7e09f0c5692225",
+    "zh:3f9383f234005dde49525263e881b019d59f3e2fff1b18b56940d008fffe24e0",
+    "zh:515ae378c2c6a1d277c74dba4f1a42fcc07b561967d587bd659499839f4a5844",
+    "zh:5b525802a207be23271b77a04181a3c17f35ee931d062657eec86c914727e450",
+    "zh:6a7d0033b76274a329831671509d11c52e41aa4258c8edf74451291365427ecb",
+    "zh:6f05fe005f2b7567adaac6cf085a550c2409644d68891d80bc12b7999cde6df6",
+    "zh:920f223f226f1d43c52bb6b5041330e11baa1f6e9ca865275e21b413e54f7b5a",
+    "zh:9b12af85486a96aedd8d7984b0ff811a4b42e3d88dad1a3fb4c0b580d04fa425",
+    "zh:cd2dd297fad75be0c7513f99f0ab9a4838d73b932be74d49f58b59f527c917d0",
+    "zh:cec362db6a95c60bbd2c727c361c6787b8bca6c0b15cfb9c7a8b062e893ac47e",
+    "zh:d7c356cd19d7553d3968a62f50d3e24b21b30b05170ec7d7bb481d12ec77b26b",
+    "zh:dcbe6920aa64200582acf9f14c3f7577bdebc35e5c6f039f10f9f3105803640c",
+    "zh:ddbf148443c37ca45f5d8eeb92f058f694240906cd206f766aa76f6bac2cbba9",
+  ]
+}

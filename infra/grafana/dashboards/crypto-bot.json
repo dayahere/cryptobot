@@ -1,0 +1,215 @@
+{
+  "title": "Mission Control",
+  "uid": "mission-control",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 2,
+  "refresh": "10s",
+  "panels": [
+    {
+      "type": "row",
+      "title": "Infrastructure Health",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 }
+    },
+    {
+      "type": "stat",
+      "title": "Prometheus",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 1 },
+      "targets": [{ "expr": "up{job=\"prometheus\"}" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Grafana",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 1 },
+      "targets": [{ "expr": "up{job=\"grafana\"}" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Alertmanager",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 1 },
+      "targets": [{ "expr": "up{job=\"alertmanager\"}" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "type": "stat",
+      "title": "Bot",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 1 },
+      "targets": [{ "expr": "up{job=\"bot\"}" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": 0 },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "type": "row",
+      "title": "Trading Health KPIs",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 5 }
+    },
+    {
+      "type": "stat",
+      "title": "Equity",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 6 },
+      "targets": [{ "expr": "account_equity" }]
+    },
+    {
+      "type": "graph",
+      "title": "API Errors (5m)",
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 6 },
+      "targets": [{ "expr": "sum(increase(api_errors_total[5m]))" }]
+    },
+    {
+      "type": "graph",
+      "title": "Heartbeat age (s)",
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 6 },
+      "targets": [{ "expr": "time() - bot_heartbeat_seconds" }]
+    },
+    {
+      "type": "stat",
+      "title": "Cooldown",
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 6 },
+      "targets": [{ "expr": "cooldown_active" }],
+      "fieldConfig": {
+        "defaults": {
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": 0 },
+              { "color": "red", "value": 1 }
+            ]
+          }
+        }
+      }
+    },
+
+    {
+      "type": "row",
+      "title": "Trade Performance",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 10 }
+    },
+    {
+      "type": "graph",
+      "title": "Daily Trades",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 11 },
+      "targets": [
+        { "expr": "increase(trades_won_total[1d])", "legendFormat": "Won" },
+        { "expr": "increase(trades_lost_total[1d])", "legendFormat": "Lost" },
+        { "expr": "increase(trades_breakeven_total[1d])", "legendFormat": "Breakeven" }
+      ]
+    },
+    {
+      "type": "graph",
+      "title": "Daily Realised PnL",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 11 },
+      "targets": [
+        { "expr": "increase(realised_pnl_total[1d])", "legendFormat": "PnL" }
+      ]
+    },
+    {
+      "type": "stat",
+      "title": "Rolling Daily PnL",
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 19 },
+      "targets": [{ "expr": "daily_pnl" }]
+    },
+
+    {
+      "type": "row",
+      "title": "Alert Feed",
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 23 }
+    },
+    {
+      "type": "table",
+      "title": "Live Alerts (Prometheus ALERTS)",
+      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 24 },
+      "targets": [
+        {
+          "expr": "ALERTS",
+          "instant": true,
+          "legendFormat": "{{alertname}}"
+        }
+      ],
+      "transformations": [
+        { "id": "labelsToFields", "options": { "mode": "columns" } },
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "alertname|alertstate|severity|instance|job|value"
+            }
+          }
+        }
+      ],
+      "options": {
+        "showHeader": true
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": { "align": "left" }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "alertstate" },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  { "type": "value", "options": { "match": "firing", "result": { "text": "firing" } } },
+                  { "type": "value", "options": { "match": "pending", "result": { "text": "pending" } } }
+                ]
+              },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "red", "value": 0 },
+                    { "color": "orange", "value": 0.5 }
+                  ]
+                }
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

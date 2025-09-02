@@ -1,0 +1,29 @@
+﻿groups:
+  - name: bot-alerts
+    rules:
+      - alert: BotNoHeartbeat
+        expr: time() - bot_heartbeat_seconds > 300
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Bot heartbeat missing"
+          description: "No heartbeat observed for >5 minutes."
+
+      - alert: ApiErrorsHigh
+        expr: increase(api_errors_total[10m]) > 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High API errors"
+          description: "api_errors_total increased by >10 in the last 10m."
+
+      - alert: CooldownActive
+        expr: cooldown_active > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Cooldown active"
+          description: "Trading paused due to daily loss limit."

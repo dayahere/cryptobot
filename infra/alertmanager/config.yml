@@ -1,0 +1,24 @@
+﻿route:
+  receiver: email
+  group_wait: 10s
+  group_interval: 1m
+  repeat_interval: 4h
+
+receivers:
+  - name: email
+    email_configs:
+      - to: "dayashimoga098@gmail.com"
+        from: "dayashimoga098@gmail.com"
+        smarthost: "smtp.gmail.com:587"
+        auth_username: "dayashimoga098@gmail.com"
+        auth_identity: "dayashimoga098@gmail.com"
+        # auth_password: "inzigtexcnlfxibz"  # Use Gmail App Password
+        auth_password: '${GMAIL_APP_PASSWORD}'
+        require_tls: true
+  # - name: webhook
+  #   webhook_configs:
+  #     - url: "http://host.docker.internal:5001/"
+  
+  - name: webhook
+    webhook_configs:
+      - url: "http://my-webhook-service:5001/"

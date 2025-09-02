@@ -1,0 +1,10 @@
+﻿#cloud-config
+package_update: true
+runcmd:
+  - apt-get update
+  - apt-get install -y docker.io docker-compose git
+  - systemctl enable docker
+  - mkdir -p /opt/crypto-bot
+  - cd /opt && git clone  crypto-bot || (cd crypto-bot && git pull)
+  - cd /opt/crypto-bot && docker build -t crypto-bot-bot:1.1.0 ./bot
+  - cd /opt/crypto-bot && docker compose up -d
